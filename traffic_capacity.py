@@ -6,7 +6,7 @@ import time
 
 # Parameters
 input_video_path = '/Users/boma/traffic_project_trainning/morning/AB17-0830H.avi'
-output_video_path = '/Users/boma/traffic_project_trainning/output/AB17-0830H_output.mp4'
+output_video_path = '/Users/boma/traffic_project_trainning/output/AB17-0830H_capacity_output.mp4'
 print("Video Preprossing start!")
 video = cv.VideoCapture(input_video_path)
 ret, test_frame = video.read()
@@ -88,9 +88,9 @@ while(total_frames == -1 or len(output_frames) < total_frames):
             print("Capacity at current frame is {}".format(str(capacity)))
             output_img = cv.putText(base_frame,
                         "CAPACITY: {:.2%}".format(capacity),
-                        (10, 50),
+                        (75, 120),
                         font, 2,
-                        (255, 100, 200), 3,)
+                        (255, 255, 255), 3,cv.LINE_AA)
             output_frames.append(output_img)
             # pbar.update(1)
     else:

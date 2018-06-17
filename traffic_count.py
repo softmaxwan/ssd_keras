@@ -6,7 +6,7 @@ import time
 
 # Parameters
 input_video_path = '/Users/boma/traffic_project_trainning/morning/AB17-0830H.avi'
-output_video_path = '/Users/boma/traffic_project_trainning/output/AB17-0830H_output.mp4'
+output_video_path = '/Users/boma/traffic_project_trainning/output/AB17-0830H_count_output.mp4'
 
 print("Video Preprossing start!")
 video = cv.VideoCapture(input_video_path)
@@ -83,8 +83,8 @@ def countour_filter(contours):
     return matches
 
 
-min_contour_width = 30
-min_contour_height = 30
+min_contour_width = 50
+min_contour_height = 50
 
 font = cv.FONT_HERSHEY_SIMPLEX
 video = cv.VideoCapture(input_video_path)
@@ -118,9 +118,9 @@ while (total_frames == -1 or len(output_frames) < total_frames):
 
             output_img = cv.putText(frame,
                                     "COUNT: {}".format(len(matches)),
-                                    (10, 50),
+                                    (75, 120),
                                     font, 2,
-                                    (100, 100, 200), 3,
+                                    (255, 255, 255), 3,
                                     cv.LINE_AA)
             output_frames.append(output_img)
             # pbar.update(1)
@@ -133,18 +133,18 @@ while (total_frames == -1 or len(output_frames) < total_frames):
 video.release()
 
 print("Video Detectiong end and Start to print result!")
-# ### Outputs: matches or pts
-#
-# fourcc = cv.VideoWriter_fourcc(*'MP4V')
-# out = cv.VideoWriter()
-#
-# opened = out.open(output_video_path, fourcc, fps, (img_width, img_height))
-#
-# for img in output_frames:
-#     img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
-#     out.write(img)
-#
-# out.release()
+### Outputs: matches or pts
+
+fourcc = cv.VideoWriter_fourcc(*'MP4V')
+out = cv.VideoWriter()
+
+opened = out.open(output_video_path, fourcc, fps, (img_width, img_height))
+
+for img in output_frames:
+    img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
+    out.write(img)
+
+out.release()
 #
 # fig = plt.figure(figsize=(20,12))
 # plt.subplot(221),plt.imshow(cv.cvtColor(frame, cv.COLOR_BGR2RGB)),plt.title('Original')
