@@ -7,7 +7,7 @@ import time
 # Parameters
 input_video_path = '/Users/boma/traffic_project_trainning/morning/AB17-0830H.avi'
 output_video_path = '/Users/boma/traffic_project_trainning/output/AB17-0830H_output.mp4'
-
+print("Video Preprossing start!")
 video = cv.VideoCapture(input_video_path)
 ret, test_frame = video.read()
 
@@ -75,7 +75,9 @@ font = cv.FONT_HERSHEY_SIMPLEX
 video = cv.VideoCapture(input_video_path)
 output_frames = []
 
+print("Video Preprossing end!")
 # pbar = tqdm(total_frames)
+print("Video Detectiong start!")
 
 count = 0
 while(total_frames == -1 or len(output_frames) < total_frames):
@@ -99,12 +101,12 @@ while(total_frames == -1 or len(output_frames) < total_frames):
 
 video.release()
 
-### Outputs: capacity
+## Outputs: capacity
 
 fourcc = cv.VideoWriter_fourcc(*'MP4V')
-out = cv.VideoWriter(output_video_path, fourcc, fps, (img_width, img_height))
+out = cv.VideoWriter()
 
-# opened = out.open(output_video_path, fourcc, fps, (img_width, img_height))
+opened = out.open(output_video_path, fourcc, fps, (img_width, img_height))
 
 for img in output_frames:
     img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
@@ -112,7 +114,7 @@ for img in output_frames:
     out.write(img)
 
 out.release()
-
+print("Video Detectiong end and Start to print result!")
 fig = plt.figure(figsize=(20,12))
 fig.suptitle("Capacity: {}%".format(capacity*100), fontsize=16)
 plt.subplot(221),plt.imshow(base_frame),plt.title('Original')

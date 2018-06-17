@@ -27,11 +27,12 @@ import time
 weights_path = '/Users/boma/traffic_project_trainning/trained_model/VGG_VOC0712Plus_SSD_512x512_ft_iter_160000.h5'
 
 input_video_path = './examples/MOT16-05.mp4'
-output_video_path = './examples/MOT16-05_output.mp4'
+output_video_path = '/Users/boma/traffic_project_trainning/output/MOT16-05_output.mp4'
 
 total_frames = 50 # max. number of frames to capture, if -1, process entire stream
 
 # Open input video and retrieve frame size and FPS
+print("Video Preprossing start!")
 
 video = cv.VideoCapture(input_video_path)
 ret, test_frame = video.read()
@@ -73,7 +74,7 @@ model = ssd_512(image_size=(img_height, img_width, 3),
                nms_max_output_size=400)
 
 # 2: Load the trained weights into the model.
-
+print("Load the trained weights into the model!")
 model.load_weights(weights_path, by_name=True)
 
 # 3: Compile the model so that Keras won't complain the next time you load it.
@@ -87,7 +88,7 @@ model.compile(optimizer=adam, loss=ssd_loss.compute_loss)
 # Capture video frames
 
 cap_frames = []
-
+print("Video Object detection start!")
 video = cv.VideoCapture(input_video_path)
 while (total_frames == -1 or len(cap_frames) < total_frames):
     ret, frame = video.read()
@@ -104,7 +105,7 @@ video.release()
 input_images = np.array(cap_frames)
 
 start_time = time.time()
-y_pred = model.predict(input_images)
+y_pred = model.predict(input_images,batch_size=8)
 end_time = time.time()
 
 print("{} frames processed.".format(len(cap_frames)))
@@ -118,19 +119,22 @@ confidence_threshold = 0.5
 y_pred_thresh = [y_pred[k][y_pred[k,:,1] > confidence_threshold] for k in range(y_pred.shape[0])]
 
 np.set_printoptions(precision=2, suppress=True, linewidth=90)
-print("Predicted boxes:\n")
-print('   class   conf xmin   ymin   xmax   ymax')
-print(y_pred_thresh[9])
+
 
 # Prepare labels
 
 colors = plt.cm.hsv(np.linspace(0, 1, 21))[:, 0:3] * 254 # Colours are in HSV space, but look good anyway
+
+print("We can recongnise those objects from our pre-trained model")
 classes = ['background',
            'aeroplane', 'bicycle', 'bird', 'boat',
            'bottle', 'bus', 'car', 'cat',
            'chair', 'cow', 'diningtable', 'dog',
            'horse', 'motorbike', 'person', 'pottedplant',
            'sheep', 'sofa', 'train', 'tvmonitor']
+
+for object in classes:
+    print(object)
 
 # Draw bounding boxes using OpenCV
 
@@ -160,5 +164,11 @@ for i in range(len(output_images)):
 
 ### outputs: y_pred_thresh
 
+print("Detaection had been done and we can see those in the video")
+print("Predicted boxes:\n")
+print('   class   conf xmin   ymin   xmax   ymax')
+print(y_pred_thresh[9])
+
 plt.figure(figsize=(20,12))
 plt.imshow(output_images[7])
+plt.show()

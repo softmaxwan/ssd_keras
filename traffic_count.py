@@ -8,7 +8,7 @@ import time
 input_video_path = '/Users/boma/traffic_project_trainning/morning/AB17-0830H.avi'
 output_video_path = '/Users/boma/traffic_project_trainning/output/AB17-0830H_output.mp4'
 
-
+print("Video Preprossing start!")
 video = cv.VideoCapture(input_video_path)
 ret, test_frame = video.read()
 
@@ -90,9 +90,9 @@ font = cv.FONT_HERSHEY_SIMPLEX
 video = cv.VideoCapture(input_video_path)
 output_frames = []
 bg_subtractor = cv.createBackgroundSubtractorMOG2(history=train_its, detectShadows=True)
-
+print("Video Preprossing end!")
 # pbar = tqdm(total_frames)
-
+print("Video Detectiong start!")
 prev = None
 count = 0
 while (total_frames == -1 or len(output_frames) < total_frames):
@@ -114,6 +114,8 @@ while (total_frames == -1 or len(output_frames) < total_frames):
                 pts = contour_to_pts(match)
                 cv.polylines(frame, [pts], True, (0, 255, 0), thickness=3)
 
+            print("Vehicles detected in current frame is {}".format(len(matches)))
+
             output_img = cv.putText(frame,
                                     "COUNT: {}".format(len(matches)),
                                     (10, 50),
@@ -130,29 +132,30 @@ while (total_frames == -1 or len(output_frames) < total_frames):
 
 video.release()
 
-### Outputs: matches or pts
-
-fourcc = cv.VideoWriter_fourcc(*'MP4V')
-out = cv.VideoWriter()
-
-opened = out.open(output_video_path, fourcc, fps, (img_width, img_height))
-
-for img in output_frames:
-    img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
-    out.write(img)
-
-out.release()
-
-fig = plt.figure(figsize=(20,12))
-plt.subplot(221),plt.imshow(cv.cvtColor(frame, cv.COLOR_BGR2RGB)),plt.title('Original')
-# plt.subplot(222),plt.imshow(dilation),plt.title('Foreground Mask')
-plt.subplot(223),plt.imshow(cv.cvtColor(img, cv.COLOR_BGR2RGB)),plt.title('Contours')
-plt.show()
-# second phase
-
-plt.imshow(frame)
-plt.show()
-
-# Third phase
-plt.imshow(fg_mask)
-plt.show()
+print("Video Detectiong end and Start to print result!")
+# ### Outputs: matches or pts
+#
+# fourcc = cv.VideoWriter_fourcc(*'MP4V')
+# out = cv.VideoWriter()
+#
+# opened = out.open(output_video_path, fourcc, fps, (img_width, img_height))
+#
+# for img in output_frames:
+#     img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
+#     out.write(img)
+#
+# out.release()
+#
+# fig = plt.figure(figsize=(20,12))
+# plt.subplot(221),plt.imshow(cv.cvtColor(frame, cv.COLOR_BGR2RGB)),plt.title('Original')
+# # plt.subplot(222),plt.imshow(dilation),plt.title('Foreground Mask')
+# plt.subplot(223),plt.imshow(cv.cvtColor(img, cv.COLOR_BGR2RGB)),plt.title('Contours')
+# plt.show()
+# # second phase
+#
+# plt.imshow(frame)
+# plt.show()
+#
+# # Third phase
+# plt.imshow(fg_mask)
+# plt.show()
